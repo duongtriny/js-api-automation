@@ -1,13 +1,10 @@
 const { test, expect } = require('@playwright/test');
 const Ajv = require("ajv");
+const { BASE_URL } = require('../../src/common/config-utils');
 const ajv = new Ajv();
 
-const host = 'http://localhost';
-const port = 3000;
-const baseUrl = `${host}:${port}`;
-
 test("Verify user login successful", async ({ request }) => {
-    const response = await request.post(`${baseUrl}/api/login`, {
+    const response = await request.post(`${BASE_URL}/api/login`, {
         data: {
             username: "staff",
             password: "1234567890"

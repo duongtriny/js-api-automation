@@ -4,54 +4,22 @@ const Ajv = require("ajv");
 const ajv = new Ajv();
 
 import { userRequestBodyTemplate } from '../../../data/user/create-user-api/create-user-data';
-
-const host = 'http://localhost';
-const port = 3000;
-const baseUrl = `${host}:${port}`;
-const createUserApi = `${baseUrl}/api/user`;
-const getUserApi = `${baseUrl}/api/user`;
-const deleteUserApi = `${baseUrl}/api/user`;
-const loginApi = `${baseUrl}/api/login`;
-const knex = require('knex')({
-    client: 'pg',
-    connection: "postgresql://postgres:123456@localhost:5432",
-    searchPath: ['knex', 'public'],
-});
+import { CREATE_USER_API, GET_USER_API, DELETE_USER_API } from "../../../src/common/user-config-utils";
+import { knex } from '../../../src/common/database-utils';
+import { getLoginInfo, checkTimeout } from '../../../src/common/login-utils';
 
 let token;
 let timeout;
 let getTokenMoment;
-async function getLoginInfo(request) {
-    const loginResponse = await request.post(loginApi, {
-        data: {
-            username: "staff",
-            password: "1234567890"
-        }
-    });
-    const jsonLoginResponse = await loginResponse.json();
-    console.log("Login response: ", jsonLoginResponse);
-    expect(loginResponse.status()).toBe(200);
-    expect(jsonLoginResponse.token).toBeDefined();
-    return {
-        token: `Bearer ${jsonLoginResponse.token}`,
-        timeout: jsonLoginResponse.timeout
-    }
-}
+
 test.beforeAll((async ({ request }) => {
     //Get login token
-    getTokenMoment = new Date().getTime();
-    let loginInfo = await getLoginInfo(request);
-    token = loginInfo.token;
-    timeout = loginInfo.timeout;
+    ({ getTokenMoment, token, timeout } = await checkTimeout(request, getTokenMoment, token, timeout));
 }));
 
 test.beforeEach(async ({ request }) => {
-
     if ((new Date().getTime()) - getTokenMoment > timeout) {
-        getTokenMoment = new Date().getTime();
-        let loginInfo = await getLoginInfo(request);
-        token = loginInfo.token;
-        timeout = loginInfo.timeout;
+        ({ getTokenMoment, token, timeout } = await checkTimeout(request, getTokenMoment, token, timeout));
     }
 });
 
@@ -90,7 +58,7 @@ test.beforeEach(async ({ request }) => {
     test(testCaseName, async ({ request }) => {
         //Create user        
         const timeBeforeCreateCustomer = new Date();
-        const createUserResponse = await request.post(createUserApi,
+        const createUserResponse = await request.post(CREATE_USER_API,
             {
                 headers: {
                     Authorization: token
@@ -106,7 +74,7 @@ test.beforeEach(async ({ request }) => {
         expect(jsonCreateUserResponse.message).toEqual("Customer created");
 
         //Double check created user
-        const getUserResponse = await request.get(`${getUserApi}/${jsonCreateUserResponse.id}`, {
+        const getUserResponse = await request.get(`${GET_USER_API}/${jsonCreateUserResponse.id}`, {
             headers: {
                 Authorization: token
             }
@@ -133,7 +101,7 @@ test.beforeEach(async ({ request }) => {
         verifyDateTime(timeBeforeCreateCustomer, jsonGetUserResponse.addresses[0].updatedAt);
 
         //Clean up data
-        await request.delete(`${deleteUserApi}/${jsonCreateUserResponse.id}`, {
+        await request.delete(`${DELETE_USER_API}/${jsonCreateUserResponse.id}`, {
             headers: {
                 Authorization: token
             }
@@ -195,7 +163,7 @@ function verifyDateTime(timeBeforeCreateCustomer, actual) {
 ].forEach(({ testCaseName, requestBody, expectedResponse }) => {
     test(testCaseName, async ({ request }) => {
         //Create user        
-        const createUserResponse = await request.post(createUserApi,
+        const createUserResponse = await request.post(CREATE_USER_API,
             {
                 headers: {
                     Authorization: token
@@ -215,7 +183,7 @@ test("Verify create user successful by database query", async ({ request }) => {
     let requestBody = _.cloneDeep(userRequestBodyTemplate);
     //Create user        
     const timeBeforeCreateCustomer = new Date();
-    const createUserResponse = await request.post(createUserApi,
+    const createUserResponse = await request.post(CREATE_USER_API,
         {
             headers: {
                 Authorization: token
@@ -255,7 +223,7 @@ test("Verify create user successful by database query", async ({ request }) => {
     verifyDateTime(timeBeforeCreateCustomer, actualUserFromDb.addresses[0].updatedAt);
 
     //Clean up data
-    await request.delete(`${deleteUserApi}/${jsonCreateUserResponse.id}`, {
+    await request.delete(`${DELETE_USER_API}/${jsonCreateUserResponse.id}`, {
         headers: {
             Authorization: token
         }
