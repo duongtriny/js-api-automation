@@ -47,7 +47,7 @@ test("Verify user login successful", async ({ request }) => {
     }
 ].forEach(requestBody => {
     test(`Verify user login unsuccessful with username: ${requestBody.username} and password: ${requestBody.password}`, async ({request}) =>{
-        const response = await request.post(`${baseUrl}/api/login`, {
+        const response = await request.post(`${BASE_URL}/api/login`, {
             data: requestBody
         });
         const jsonResponse = await response.json();

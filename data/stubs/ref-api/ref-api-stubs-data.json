@@ -1,0 +1,109 @@
+{
+    "port": 7777,
+    "protocol": "http",
+    "name": "Ref API",
+    "defaultResponse": {
+        "statusCode": 404,
+        "body": {
+            "message": "Can not find ref stub!"
+        },
+        "headers": {
+            "content-type": "application/json;charset=utf-8"
+        }
+    },
+    "stubs": [
+        {
+            "predicates": [
+                {
+                    "equals": {
+                        "method": "GET",
+                        "path": "/get-card-info-by-type",
+                        "query": {
+                            "type": "SLIVER"
+                        },
+                        "headers": {
+                            "api-key": "a-private-key"
+                        }
+                    }
+                }
+            ],
+            "responses": [
+                {
+                    "is": {
+                        "statusCode": 200,
+                        "headers": {
+                            "Content-Type": "application/json"
+                        },
+                        "body": {
+                            "cardColor": "Sliver",
+                            "textColor": "Black",
+                            "material": "Plastic"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "predicates": [
+                {
+                    "equals": {
+                        "method": "GET",
+                        "path": "/get-card-info-by-type",
+                        "query": {
+                            "type": "GOLD"
+                        },
+                        "headers": {
+                            "api-key": "a-private-key"
+                        }
+                    }
+                }
+            ],
+            "responses": [
+                {
+                    "is": {
+                        "statusCode": 200,
+                        "headers": {
+                            "Content-Type": "application/json"
+                        },
+                        "body": {
+                            "cardColor": "Coral",
+                            "textColor": "White",
+                            "material": "Plastic"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "predicates": [
+                {
+                    "equals": {
+                        "method": "GET",
+                        "path": "/get-card-info-by-type",
+                        "query": {
+                            "type": "PLATINUM"
+                        },
+                        "headers": {
+                            "api-key": "a-private-key"
+                        }
+                    }
+                }
+            ],
+            "responses": [
+                {
+                    "is": {
+                        "statusCode": 200,
+                        "headers": {
+                            "Content-Type": "application/json"
+                        },
+                        "body": {
+                            "cardColor": "Black",
+                            "textColor": "Gray",
+                            "material": "Metal"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,62 @@
+{
+    "port": 7778,
+    "protocol": "http",
+    "name": "Build card API",
+    "defaultResponse": {
+        "statusCode": 404,
+        "body": {
+            "message": "Can not find build card stub!"
+        },
+        "headers": {
+            "content-type": "application/json;charset=utf-8"
+        }
+    },
+    "stubs": [
+        {
+            "predicates": [
+                {
+                    "and": [
+                        {
+                            "equals": {
+                                "method": "POST",
+                                "path": "/card-service/build",
+                                "headers": {
+                                    "api-key": "another-private-key"
+                                },
+                                "body": {
+                                    "name": "Doe Jos",
+                                    "cardColor": "Sliver",
+                                    "textColor": "Black",
+                                    "material": "Plastic"
+                                }
+                            }
+                        },
+                        {
+                            "exists": {
+                                "body": true
+                            },
+                            "jsonpath": {
+                                "selector": "$.id"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "responses": [
+                {
+                    "is": {
+                        "statusCode": 200,
+                        "headers": {
+                            "Content-Type": "application/json"
+                        },
+                        "body": {
+                            "cardNumber": "7618-6321-9836-2109",
+                            "name": "Doe Jos",
+                            "expiredDate": "01-23-2030"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
