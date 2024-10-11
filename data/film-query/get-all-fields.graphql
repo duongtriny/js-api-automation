@@ -1,0 +1,12 @@
+{
+  film(filmID: "1") {
+    title
+    episodeID
+    director
+    producers
+    releaseDate
+    id
+    created
+    edited
+  }
+}
