@@ -73,10 +73,10 @@ module.exports = defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  webServer: {
+    command: 'npx mb --configfile data/stubs/imposters.ejs',
+    url: 'http:localhost:2525',
+    reuseExistingServer: !process.env.CI,
+  },
 });
 

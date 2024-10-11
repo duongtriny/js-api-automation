@@ -24,7 +24,7 @@
                                     "api-key": "another-private-key"
                                 },
                                 "body": {
-                                    "name": "Doe Jos",
+                                    "name": "Doe John",
                                     "cardColor": "Sliver",
                                     "textColor": "Black",
                                     "material": "Plastic"
@@ -51,7 +51,7 @@
                         },
                         "body": {
                             "cardNumber": "7618-6321-9836-2109",
-                            "name": "Doe Jos",
+                            "name": "Doe John",
                             "expiredDate": "01-23-2030"
                         }
                     }
